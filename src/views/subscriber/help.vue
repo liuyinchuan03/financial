@@ -1,17 +1,13 @@
 <template>
     <div>
         <div class="centre">
-        <a href="./详情.html">
             <div class="content">
                 <div class="flow">
                     <ul>
-                        <li>1、申请信用卡流程</li>
-                        <li>2、申请货款流程</li>
-                        <li>3、投保流程</li>
+                        <li @click="general(val.id)" v-for="(val,index) in helpArr" :key="index">{{index+' 丶 '+val.description}}</li>
                     </ul>
                 </div>
             </div>
-        </a>
         <div class="exercise">
             联系我们：<i>400000000</i>
         </div>
@@ -22,7 +18,8 @@
 export default {
     data(){
         return{
-
+            // 帮助流程
+            helpArr:[],
         }
     },
     mounted(){
@@ -32,8 +29,14 @@ export default {
         help(){
             this.$http.post('/common/queryHelpsList')
             .then((res)=>{
-                console.log(res);
+                this.helpArr=res.data.data
             })
+        },
+        general(id){
+             this.$router.push({ 
+                path: '/general',
+                 query:{id: id }
+                 })
         }
     }
 }
@@ -46,7 +49,7 @@ export default {
 
 .content {
     width: 7.1rem;
-    height: 2.66rem;
+    /* height: 2.66rem; */
     background-color: #fff;
     margin: 0.4rem auto;
 }
@@ -59,9 +62,6 @@ export default {
     font-size: 0.3rem;
 }
 
-.flow li:nth-child(3) {
-    border: none;
-}
 
 .exercise {
     width: 7.1rem;

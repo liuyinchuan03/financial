@@ -4,12 +4,12 @@
             <div class="content">
                 <!-- 头部 -->
                 <div class="header">
-                <div class="header-img" @click="jump">
+                <div class="header-img" >
                     <!-- 轮播图 -->
 
                     <div class="swiper-container">
                             <mt-swipe :auto="4000">
-                                <mt-swipe-item  v-for="(list,index)  in swiperData " :key="index"><img :src="imageUrl+list.image"></mt-swipe-item>
+                                <mt-swipe-item  v-for="(list,index)  in swiperData " :key="index"><img @click="recom(list.categoryId)" :src="imageUrl+list.image"></mt-swipe-item>
                                 <!-- <mt-swipe-item><img src="../assets/images/2首页_03.png"></mt-swipe-item>
                                 <mt-swipe-item><img src="../assets/images/2首页_03.png"></mt-swipe-item> -->
                                 </mt-swipe>

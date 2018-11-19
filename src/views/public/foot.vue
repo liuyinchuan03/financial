@@ -33,6 +33,7 @@ export default {
 }
 .credFoot img{
     width: 0.14rem;
+    height: 0.27rem;
 }
 .credFoot-l{
     width: 40%;

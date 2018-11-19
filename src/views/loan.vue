@@ -3,9 +3,9 @@
         <div class="father">
         <!-- 头部轮播 -->
         <div class="broadcast">
-            <div class="swiper-container" @click="tapSwiper">
+            <div class="swiper-container" >
                         <mt-swipe :auto="4000">
-                            <mt-swipe-item  v-for="(list,index)  in swiperData " :key="index"><img :src="imageUrl+list.image"></mt-swipe-item>
+                            <mt-swipe-item  v-for="(list,index)  in swiperData " :key="index"><img @click="tapSwiper(list.id)" :src="imageUrl+list.image"></mt-swipe-item>
                             </mt-swipe>
                 </div>
         </div>
@@ -14,74 +14,46 @@
             <ul>
                 <li v-for="(list,index)  in loanArr" :key="index" 
                  @click="loanClick(list.name,list.id)"> <a href="JavaScript:;"  :class="{active : loanTap == list.name}">{{list.name}}</a></li>
-
             </ul>
             <ol>
                 <li>
-                    <select>
-                        <option value ="volvo">贷款金额</option>
-                        <option v-for="(list,index)  in downMney" :key="index" >{{list.min+' - '+list.max}}</option>
+                    <select v-model="couponSelected" @change="getCouponSelected">
+                        <option value ="贷款金额">贷款金额</option>
+                        <option :value="list.id" v-for="(list,index)  in downMney" :key="index" >{{list.min+' - '+list.max}}</option>
 
                     </select>
                 </li>
                 <li>
-                    <select>
-                        <option value ="volvo">预计期限</option>
-                        <option v-for="(list,index)  in downMonth" :key="index">{{list.min+' - '+list.max}}</option>
+                    <select v-model="couponSelected2" @change="getCouponSelected2">
+                        <option value="预计期限">预计期限</option>
+                        <option :value="list.id" v-for="(list,index)  in downMonth" :key="index">{{list.min+' - '+list.max}}</option>
                     </select>
                 </li>
                 <li>
-                    <select>
-                        <option value ="volvo">利率范围</option>
-                        <option v-for="(list,index)  in rate" :key="index">{{list.value}}</option>
+                    <select v-model="couponSelected3" @change="getCouponSelected3">
+                        <option value ="利率范围">利率范围</option>
+                        <option :value="list.id" v-for="(list,index)  in rate" :key="index">{{list.value}}</option>
                     </select>
                 </li>
             </ol>
         </div>
         <!-- 分类 -->
         <div class="main">
-            <div class="list" @click="tapSwiper">
-                <div class="box">
-                    <div class="list1 bgc1"></div>
-                    <h2>宜信贷</h2>
-                </div>
-                <div class="container">
-                    <p>500-30万</p>
-                    <i>高额限时放款</i>
-                    <span>参考日息:0.02%</span>
-                    <span>借款限期:3月-12月</span>
-                    <a @click.stop="tabT">一键申请</a>
-                </div>
-
-            </div>
-            <div class="list">
-                <div class="box">
-                    <div class="list1 bgc2"></div>
-                    <h2>恒昌贷</h2>
-                </div>
-                <div class="container">
-                    <p>500-30万</p>
-                    <i>高额限时放款</i>
-                    <span>参考日息:0.02%</span>
-                    <span>借款限期:1月-6月</span>
-                    <a @click.stop="tabT">一键申请</a>
-                </div>
-
-            </div>
-            <div class="list">
-                <div class="box">
-                    <div class="list1 bgc3"></div>
-                    <h2>拍拍贷</h2>
-                </div>
-                <div class="container">
-                    <p>500-30万</p>
-                    <i>高额限时放款</i>
-                    <span>参考日息:0.02%</span>
-                    <span>借款限期:1月-12月</span>
-                    <a @click.stop="tabT">一键申请</a>
-                </div>
-
-            </div>
+            <ul>
+                <li class="list" @click="tapSwiper(list.id)" v-for="(list,index)  in safeList" :key="index">
+                    <div class="box">
+                        <div class="list1 bgc1"><img :src="imgUrl()+list.cover" alt=""></div>
+                        <h2>{{list.name}}</h2>
+                    </div>
+                    <div class="container">
+                        <p>{{list.minAmount +'-'+ list.maxAmount+'万'}}</p>
+                        <i>{{list.description}}</i>
+                        <span>{{'参考日息'+list.interest}}</span>
+                        <span>{{'借款限期:'+list.minMonth+'月'+'-'+list.maxMonth+'月'}}</span>
+                        <a @click.stop="tabT">一键申请</a>
+                    </div>
+                </li>
+            </ul>
         </div>
         <!-- 底部导航 -->
 <div class="footer">
@@ -105,7 +77,7 @@
                 <img src="../assets/images/用户中心1.png" alt="">
                 <span>用户中心</span>
             </router-link>
-            </ul>
+        </ul>
     </div>
     </div>
     </div>
@@ -131,7 +103,30 @@ export default {
     downMonth:[],
     //   下拉利率
     rate:[],
+        // 最小金额
+        minAmount:'',
+        //最大金额
+        maxAmount:'',
+        // 月份
+        minMonth:'',
+        maxMonth:'',
+        // 利率
+        rates:'',
+    // 下拉金额选中
+    couponSelected:'',
+    couponSelected2:'',
+    couponSelected3:'',
+    // 贷款列表
+    safeList:[]
     }
+  },
+  created(){
+    //   this.downMney[-1].id
+      this.couponSelected = '贷款金额';
+      this.couponSelected2 = '预计期限';
+      this.couponSelected3 = '利率范围';
+          // 贷款列表
+
   },
     mounted () {
     // 轮播
@@ -140,10 +135,15 @@ export default {
     this.loanList()
     // 贷款下拉框
     this.loanScreenList()
+    // 贷款列表
+    this.loansList()
   },
   methods: {
-    tapSwiper: function () {
-      this.$router.push('/loanDetails')
+    tapSwiper: function (id) {
+      this.$router.push({ 
+                path: '/loanDetails',
+                 query:{id: id }
+                 })
     },
     tabT: function () {
       this.$router.push('/apply')
@@ -159,6 +159,7 @@ export default {
     loanList(){
         this.$http.post('/loan/loanList')
         .then((res)=>{
+            // console.log(this.loanArr);
             this.loanArr=res.data.data
             this.loanTap=res.data.data[0].name
         })
@@ -177,18 +178,74 @@ export default {
                     type:3}
         this.$http.post('/loan/loanScreenList',con1)
         .then((res)=>{
-            // console.log(res);
             this.downMney=res.data.data
+            // console.log(this.downMney);
         })
         this.$http.post('/loan/loanScreenList',con2)
         .then((res)=>{
-            //  console.log(res);
             this.downMonth=res.data.data
+            //  console.log(this.downMonth);
         })
         this.$http.post('/loan/loanScreenList',con3)
         .then((res)=>{
-            //  console.log(res);
             this.rate=res.data.data
+        })
+    },
+    // 下拉选
+    getCouponSelected(){
+        let id=this.couponSelected;
+        for(var i=0;i<this.downMney.length;i++){
+            if(this.downMney[i].id==id){
+            this.minAmount=this.downMney[i].min;
+            this.maxAmount=this.downMney[i].max;
+            }else{
+            this.minAmount='';
+            this.maxAmount='';
+            }
+        }
+            this.loansList()
+    },
+    getCouponSelected2(){
+        let id=this.couponSelected2;
+        for(var i=0;i<this.downMonth.length;i++){
+            if(this.downMonth[i].id==id){
+            this.minMonth=this.downMonth[i].min;
+            this.maxMonth=this.downMonth[i].max;
+            }else{
+            this.minMonth='';
+            this.maxMonth='';
+            }
+        }
+            this.loansList()
+    },
+    getCouponSelected3(){
+        let id=this.couponSelected3;
+        for(var i=0;i<this.rate.length;i++){
+            if(this.rate[i].id==id){
+            this.rates=this.rate[i].value;
+            }else{
+            this.rates='';
+            }
+        }
+            this.loansList()
+    },
+    // 贷款列表
+    loansList(id){
+        let loanListData={
+            loanId:this.loanId,
+            minAmount:this.minAmount,
+            maxAmount:this.maxAmount,
+            minMonth:this.minMonth,
+            maxMonth:this.maxMonth,
+            rate:this.rates,
+            pageNum:1,
+            pageSize:9,
+        }
+        this.$http.post('/loan/loanProductList',loanListData)
+        .then((res)=>{
+            this.safeList=res.data.data.records
+            // console.log(this.safeList);
+            
         })
     }
   }
@@ -260,7 +317,10 @@ export default {
     height: 0.79rem;
     line-height: 0.79rem;
 }
-
+.list1 img{
+    width: 0.54rem;
+    height: 0.54rem;
+}
 .father a {
     box-sizing: border-box;
     display: block;
@@ -364,18 +424,6 @@ ol li select{
     line-height: .50rem;
     text-align: center;
     font-size: .28rem;
-}
-
-.father .bgc1 {
-    background: url('../assets/images/list1.png') no-repeat center;
-}
-
-.father .bgc2 {
-    background: url('../assets/images/list2.png') no-repeat center;
-}
-
-.father .bgc3 {
-    background: url('../assets/images/list3.png') no-repeat center;
 }
 
 /* 底部 */

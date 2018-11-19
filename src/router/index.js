@@ -46,6 +46,7 @@ import system from '@/views/subscriber/system'
 import extension from '@/views/subscriber/extension'
 import help from '@/views/subscriber/help'
 import subCard from '@/views/subscriber/subCard'
+import general from '@/views/subscriber/general'
 import bankProgress from '@/views/subscriber/bankProgress'
 // 订单详情头部
 import orderHead from '@/views/public/orderHead'
@@ -199,6 +200,15 @@ export default new Router({
                     }
                 },
                 {
+                    name: 'general',
+                    path: '/general',
+                    component: general,
+                    meta: {
+                        title: '申请流程'
+                    }
+                },
+                {
+                    name: 'safeDetails',
                     path: '/safeDetails',
                     component: safeDetails,
                     meta: {
@@ -246,6 +256,7 @@ export default new Router({
             path: '/cardHui',
             component: cardHui,
             children: [{
+                    name: 'loanDetails',
                     path: '/loanDetails',
                     component: loanDetails,
                     meta: {

@@ -21,10 +21,10 @@
     <!-- 底部 -->
         <div class="credFoot">
             <div class="credFoot-l fl" >
-                <span @click="retun"> &lt;</span>
+                <span @click="retun"> <img src="../assets/images/left.png" alt=""></span>
             </div>
             <div class="credFoot-r fr">
-                <span> &gt; </span>
+                <span><img src="../assets/images/right.png" alt=""> </span>
             </div>
         </div>
     </div>
@@ -163,7 +163,7 @@ export default {
     left: 0;
     height: 0.5rem;
     width: 100%;
-    background-color: #fff;
+   background-color: #e6e9f0;
 }
 .credFoot-l{
     width: 40%;
@@ -188,5 +188,9 @@ export default {
     color: #999999 ;
     height: 0.5rem;
     line-height: 0.5rem;
+}
+.credFoot img{
+    width: 0.14rem;
+    height: 0.27rem;
 }
 </style>

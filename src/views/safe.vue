@@ -5,8 +5,8 @@
             <div class="broadcast" @click="tabSwiper">
                 <div class="swiper-container">
                         <mt-swipe :auto="4000">
-                            <mt-swipe-item  v-for="(list,index)  in swiperData" :key="index" @click="insuranceDetail(list.id)">
-                                <img :src="imgUrl()+list.image">
+                            <mt-swipe-item  v-for="(list,index)  in swiperData" :key="index" >
+                                <img @click="insuranceDetail(list.id)" :src="imgUrl()+list.image">
                                 </mt-swipe-item>
                             </mt-swipe>
                 </div>
@@ -24,34 +24,8 @@
                 </ul>
             </div>
             <!-- tabl -->
-            <div :class="tabl" @click="tabSwiper">
-                <ul>
-                    <li>
-                        <div class="tabl-img fl">
-                            <a href="JavaScript:;"><img src="../assets/images/2首页_35.png" alt=""></a>
-                        </div>
-                        <div class="tabl-con fl">
-                            <h4>享受e生旗舰版</h4>
-                            <p>800万医疗报销,不限医保价格亲民</p>
-                            <div class="tabl-foot fl"><i>¥99</i><em>起</em><span class="fr"><a href="#">众安保险</a></span></div>
-                        </div>
-                    </li>
-
-                    <li>
-                        <div class="tabl-img fl">
-                            <a href="JavaScript:;"><img src="../assets/images/2首页_37.png" alt=""></a>
-                        </div>
-                        <div class="tabl-con fl">
-                            <h4>个人综合意外险</h4>
-                            <p>18-65周岁高额意外保障</p>
-                            <div class="tabl-foot fl"><i>¥146</i><em>起</em><span class="fr"><a href="#">众安保险</a></span></div>
-                        </div>
-                    </li>
-                </ul>
-                <!-- </a> -->
-            </div>
-            <!-- 车险 -->
-            <!-- vehicle disno -->
+            <div :class="tabl" >
+                            <!-- 车险 -->
             <div :class="vehicle">
                 <div class="vehicle-an">
                     <div class="infer" @click="risk"><a href="javascript:;">测测车险</a></div>
@@ -59,19 +33,28 @@
                 <div class="vehicle-fot disno">
                     <p>我们还没有车险产品,敬请期待</p>
                 </div>
-                <div class="vehicle-con">
-                    <ul>
-                        <li @click="sideCar">
+            </div>
+                <ul>
+                    <li v-for="(list,index)  in safeContent" :key="index" @click="insuranceDetail(list.id)">
                         <div class="tabl-img fl">
-                            <a href="JavaScript:;"><img src="../assets/images/2首页_35.png" alt=""></a>
+                            <a href="JavaScript:;"><img :src="imgUrl()+list.cover" alt=""></a>
                         </div>
                         <div class="tabl-con fl">
-                            <h4>享受e生旗舰版</h4>
-                            <p>800万医疗报销,不限医保价格亲民</p>
-                            <div class="tabl-foot fl"><i>¥99</i><em>起</em><span class="fr"><a href="#">众安保险</a></span></div>
+                            <h4>{{list.name}}</h4>
+                            <p>{{list.guide}}</p>
+                            <div class="tabl-foot fl">¥<i>{{list.amount}}</i><em>起</em><span class="fr"><a href="#">{{list.description}}</a></span></div>
                         </div>
                     </li>
-                    </ul>
+                </ul>
+                <!-- </a> -->
+            </div>
+            <!-- 车险 -->
+            <div :class="vehicle">
+                <div class="vehicle-an">
+                    <div class="infer" @click="risk"><a href="javascript:;">测测车险</a></div>
+                </div>
+                <div class="vehicle-fot disno">
+                    <p>我们还没有车险产品,敬请期待</p>
                 </div>
             </div>
             <!-- 底部导航 -->
@@ -129,7 +112,6 @@ export default {
   },
   methods: {
     tabSwiper: function () {
-      this.$router.push('/safeDetails')
     },
     vehicles: function () {
       this.vehicle = 'vehicle'
@@ -139,6 +121,12 @@ export default {
     tabls: function (name,id) {
             this.aColor = name;
             this.insuranceId=id;
+            if(name=='车险'){
+                this.vehicle='vehicle'
+            }else{
+                this.vehicle='vehicle disno'
+            }
+            this.safeconData()
     },
 
     risk: function () {
@@ -164,6 +152,7 @@ export default {
             
         })
     },
+        // 跳转到保险详情
     insuranceDetail(id){
          this.$router.push({ 
                 path: '/safeDetails',
@@ -173,12 +162,14 @@ export default {
     // 保险标题对应内容
     safeconData(){
         let obj={pageNum:1,pageSize:1,insuranceId:this.insuranceId}
+        // if(this.insuranceId==)
         this.$http.post('/insurance/insuranceList',obj)
         .then((res)=>{
-            // console.log(res);
-            this.safeContent=res.data.data
+            this.safeContent=res.data.data.records
+            // console.log(this.safeContent);
         })
-    }
+    },
+
   }
 }
 </script>
@@ -276,6 +267,7 @@ color: #999999;
 }
 .centre .content .tabl li .tabl-img img,.centre .content .vehicle-con li .tabl-img img {
     width: 1.8rem;
+    height: 1.2rem;
 }
 
 .centre .content .tabl li .tabl-con,.centre .content .vehicle-con li .tabl-con {
@@ -295,6 +287,7 @@ color: #999999;
 .centre .content .tabl li .tabl-con .tabl-foot,.centre .content .vehicle-con li .tabl-con .tabl-foot {
     width: 4.6rem;
     margin-top: 0.1rem;
+    font-size: 0.26rem;
 }
 
 .centre .content .tabl li .tabl-con .tabl-foot i,.centre .content .vehicle-con li .tabl-con .tabl-foot i {
@@ -356,7 +349,9 @@ color: #999999;
     color: #999999;
         margin-bottom: 0.2rem;
 }
-
+.vehicle{
+    margin-bottom: 0.1rem;
+}
 .tabl {
     padding-bottom: 1.2rem;
 }

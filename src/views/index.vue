@@ -9,15 +9,10 @@
                 <div class="swiper-container" >
                         <mt-swipe :auto="4000">
                             <mt-swipe-item  v-for="(list,index)  in swiperData" :key="index"><img @click="card(list.id)" :src="imgUrl()+list.image"></mt-swipe-item>
-                            <!-- <mt-swipe-item><img src="../assets/images/2首页_03.png"></mt-swipe-item>
-                            <mt-swipe-item><img src="../assets/images/2首页_03.png"></mt-swipe-item> -->
+                        
                             </mt-swipe>
                 </div>
             </div>
-            <!-- 进度 -->
-            <!-- <div class="enter">
-                <a href="JavaScript:;">查询进度</a>
-            </div> -->
         </div>
         <!-- 信用卡 -->
         <div class="card">
@@ -58,15 +53,15 @@
                 <router-link tag="div" to="/safe" class="insureFont-r"><a href="#">更多 <i class="iconfont icon-jiantou"></i></a></router-link>
                 <!-- <div class="insureFont-r"></div> -->
             </div>
-            <div class="insure-con" @click="safeDetails" >
+            <div class="insure-con" >
                 <ul>
-                    <li v-for="(val,index) in safeArr" :key="index">
+                    <li v-for="(val,index) in safeArr" :key="index"  @click="safeDetails(val.id)">
                         <div class="insure-img fl"><img :src="imgUrl()+val.cover" alt=""></div>
                         <div class="insure-font fl">
                             <p>{{val.name}}</p>
                             <h4>{{val.amount}}<i>起</i></h4>
                         </div>
-                        <div class="insure-keep fr">众安保险</div>
+                        <div class="insure-keep fr">{{val.description}}</div>
                     </li>
                 </ul>
             </div>
@@ -75,7 +70,6 @@
                 <router-link tag="a" to="/enter">
                     查询进度
                 </router-link>
-                <!-- <a href="javaScript:;">查询进度</a> -->
             </div>
     </div>
     <!-- 底 -->
@@ -160,8 +154,11 @@ export default {
                  query:{id: id }
                  })
     },
-    safeDetails () {
-      this.$router.push('/safeDetails')
+    safeDetails (id) {
+      this.$router.push({ 
+                path: '/safeDetails',
+                 query:{id: id }
+                 })
     },
     // 轮播
     swiper () {
@@ -213,8 +210,6 @@ export default {
 
 <style scoped>
 
-@import '../assets/font_8gzgd2giybe/iconfont.css';
-@import '../assets/font_39zdlgji454/iconfont.css';
 .swiper-container{
     margin: 0 auto;
 }
